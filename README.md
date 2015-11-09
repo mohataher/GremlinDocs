@@ -1,10 +1,6 @@
 ![Gremlin](https://raw.github.com/tinkerpop/gremlin/master/doc/images/gremlindocs-logo.png)
 
-<a href="http://tinkerpop.com"><img src="https://raw.githubusercontent.com/apache/incubator-tinkerpop/master/docs/static/images/not-tinkerpop3-gremlin.png" width="200px"/></a>
-
-__IMPORTANT__ - The Gremlin examples shown here refer to TinkerPop 2.x.  Note that TinkerPop 3.x has been released under the Apache Software Foundation.  Find the latest information for Gremlin on the [Apache TinkerPop homepage](http://tinkerpop.incubator.apache.org/).
-
-[Gremlin](http://gremlin.tinkerpop.com) is a domain specific language for traversing property graphs. This language has application in the areas of graph query, analysis, and manipulation. See the [Getting Started](https://github.com/tinkerpop/gremlin/wiki/Getting-Started) Gremlin wiki page for downloading and installing Gremlin.
+[Gremlin](http://gremlin.tinkerpop.com) for Apache Tinkerpop 3 is a domain specific language for traversing property graphs. This language has application in the areas of graph query, analysis, and manipulation. See the [Getting Started](https://github.com/tinkerpop/gremlin/wiki/Getting-Started) Gremlin wiki page for downloading and installing Gremlin.
 
 Gremlin is an open source project maintained by [TinkerPop](http://tinkerpop.com).  Please join the Gremlin users group at http://groups.google.com/group/gremlin-users for all TinkerPop related discussions.
 
@@ -16,9 +12,9 @@ gremlin> g = TinkerGraphFactory.createTinkerGraph()
 
 This produces a hardcoded representation of the graph diagrammed [here](http://github.com/tinkerpop/blueprints/wiki/Property-Graph-Model).
 
-The documentation and samples presented here attempt to stay current with the most recent, stable release of Gremlin.  Please note that this is not the *official* Gremlin documentation.  The official documentation resides in the Gremlin [wiki](https://github.com/tinkerpop/gremlin/wiki).  Other Gremlin documentation can be found at [Sql2Gremlin](http://sql2gremlin.com/), which is focused on teaching those familiar with SQL how to think in Gremlin and graphs.
+The documentation and samples presented here attempt to stay current with the most recent, stable release of Gremlin for Apache Tinkerpop3.  Please note that this is not the *official* Gremlin documentation.  The official documentation resides in the Gremlin [wiki](http://tinkerpop.incubator.apache.org/).
 
-GremlinDocs is a [GitHub repository](https://github.com/spmallette/GremlinDocs).  Pull requests will be considered. 
+GremlinDocs for Apache Tinkerpop3 is a [GitHub repository](https://github.com/spmallette/GremlinDocs) derived from [GitHub repository for Stephen Mallette](https://github.com/spmallette/GremlinDocs). Unfotunately, he no longer maintain it since Tinkerpop 2.x. Pull requests are definitely encouraged.
 
 _Acknowledgements_: Gremlin artwork by [Ketrina Yim](http://ketrinadrawsalot.tumblr.com/) and font by Maelle Keita.
 
