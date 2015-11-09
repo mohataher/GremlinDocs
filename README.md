@@ -103,13 +103,13 @@ gremlin>  g.V(4).both('knows', 'created')
 Get both incoming and outgoing edges of the vertex.
 
 ```text
-gremlin> v = g.V(4).bothE()
+gremlin> g.V(4).bothE()
 ==>e[8][1-knows->4]
 ==>e[10][4-created->5]
 ==>e[11][4-created->3]
-gremlin> v.bothE('knows')
+gremlin> g.V(4).bothE('knows')
 ==>e[8][1-knows->4]
-gremlin> v.bothE('knows', 'created')
+gremlin> g.V(4).bothE('knows', 'created')
 ==>e[8][1-knows->4]
 ==>e[10][4-created->5]
 ==>e[11][4-created->3]
@@ -124,13 +124,13 @@ gremlin> v.bothE('knows', 'created')
 Get both incoming and outgoing vertices of the edge.
 
 ```text
-gremlin> e = g.e(12)
+gremlin> g.E(12)
 ==>e[12][6-created->3]
-gremlin> e.outV
+gremlin> g.E(12).outV()
 ==>v[6]
-gremlin> e.inV
+gremlin> g.E(12).inV()
 ==>v[3]
-gremlin> e.bothV
+gremlin> g.E(12).bothV()
 ==>v[6]
 ==>v[3]
 ```
@@ -144,15 +144,13 @@ gremlin> e.bothV
 Gets the side-effect of the pipe prior.  In other words, it emits the value of the previous step and not the values that flow through it.
 
 ```text
-gremlin> g.V('lang', 'java').in('created').name.groupCount
-==>marko
-==>josh
-==>peter
-==>josh
-gremlin> g.V('lang', 'java').in('created').name.groupCount.cap
-==>{marko=1, peter=1, josh=2}
+gremlin> g.V().groupCount('a').by(label).cap('a')
+==>[software:2, person:4]
+gremlin> g.V().groupCount('a').by(label).groupCount('b').by(outE().count()).cap('a','b') //(2)
+==>[a:[software:2, person:4], b:[0:3, 1:1, 2:1, 3:1]]
 ```
-
+1. Group and count verticies by their label. Emit the side effect labeled a, which is the group count by label.
+2. Same as statement 1, but also emit the side effect labeled b which groups vertices by the number of out edges.
 [top](#)
 
 ***
@@ -162,14 +160,14 @@ gremlin> g.V('lang', 'java').in('created').name.groupCount.cap
 The edge iterator for the graph.  Utilize this to iterate through all the edges in the graph.  Use with care on large graphs.
 
 ```text
-gremlin> g.E
+gremlin> g.E()
 ==>e[10][4-created->5]
 ==>e[7][1-knows->2]
 ==>e[9][1-created->3]
 ==>e[8][1-knows->4]
 ==>e[11][4-created->3]
 ==>e[12][6-created->3]
-gremlin> g.E.weight
+gremlin> g.E().values('weight')
 ==>1.0
 ==>0.5
 ==>0.4
@@ -182,7 +180,7 @@ gremlin> g.E.weight
 
 ***
 
-### gather
+### gather _deprecated_
 
 Collect all objects up to that step and process the gathered list with the provided closure.
 
@@ -210,11 +208,9 @@ gremlin> g.v(1).out.gather{it.size()}
 Gets the unique identifier of the element.
 
 ```text
-gremlin> v = g.V("name", "marko").next()
-==>v[1]
-gremlin> v.id
+gremlin>  g.V().has('name', 'marko').next().id()
 ==>1
-gremlin> g.v(1).id
+gremlin> g.V(1).id()
 ==>1
 ```
 
