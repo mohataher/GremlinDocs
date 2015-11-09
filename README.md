@@ -5,21 +5,46 @@
 
 Gremlin is an open source project maintained by [TinkerPop](http://tinkerpop.com).  Please join the Gremlin users group at http://groups.google.com/group/gremlin-users for all TinkerPop related discussions.
 
+The documentation and samples presented here attempt to stay current with the most recent, stable release of Gremlin for Apache Tinkerpop3.  Please note that this is not the *official* Gremlin documentation.  The official documentation resides in the Gremlin [wiki](http://tinkerpop.incubator.apache.org/).
+
+GremlinDocs for Apache Tinkerpop3 is a [GitHub repository](https://github.com/mohataher/GremlinDocs) derived from [GitHub repository for Stephen Mallette](https://github.com/spmallette/GremlinDocs). Unfotunately, the latter no longer maintain his since Tinkerpop 2.x so I'm trying to update it. Pull requests are definitely encouraged to my [repository](https://github.com/mohataher/GremlinDocs).
+
+_Acknowledgements_: Gremlin artwork by [Ketrina Yim](http://ketrinadrawsalot.tumblr.com/) and font by Maelle Keita.
+
+
+##Let's get started
+
+First, download latest version of Gremlin Console from [here](http://tinkerpop.incubator.apache.org/). You can directly download 3.0.2 version [here](https://www.apache.org/dist/incubator/tinkerpop/3.0.2-incubating/apache-gremlin-console-3.0.2-incubating-bin.zip). 
+
+Second, unzip the file and go to the main directory. 
+
+Third, run `gremlin.sh` or `gremlin.bat`:
+
+If you use a Windows machine, you should run 
+```text
+$ bin/gremlin.bat
+
+         \,,,/
+         (o o)
+-----oOOo-(3)-oOOo-----
+plugin loaded: tinkerpop.server
+plugin loaded: tinkerpop.utilities
+plugin loaded: tinkerpop.tinkergraph
+gremlin>
+```
+
 Unless otherwise noted, all samples are derived from the TinkerPop "toy" graph generated with: 
 
 ```text
-gremlin> g = TinkerGraphFactory.createTinkerGraph()
+gremlin> g = TinkerFactory.createModern().traversal(standard())
+==>graphtraversalsource[tinkergraph[vertices:6 edges:6], standard]
+
 ```
 
 This produces a hardcoded representation of the graph diagrammed [here](http://github.com/tinkerpop/blueprints/wiki/Property-Graph-Model).
 
-The documentation and samples presented here attempt to stay current with the most recent, stable release of Gremlin for Apache Tinkerpop3.  Please note that this is not the *official* Gremlin documentation.  The official documentation resides in the Gremlin [wiki](http://tinkerpop.incubator.apache.org/).
 
-GremlinDocs for Apache Tinkerpop3 is a [GitHub repository](https://github.com/spmallette/GremlinDocs) derived from [GitHub repository for Stephen Mallette](https://github.com/spmallette/GremlinDocs). Unfotunately, he no longer maintain it since Tinkerpop 2.x. Pull requests are definitely encouraged.
-
-_Acknowledgements_: Gremlin artwork by [Ketrina Yim](http://ketrinadrawsalot.tumblr.com/) and font by Maelle Keita.
-
-## Transform
+## Transform 
 
 Transform steps take an object and emit a transformation of it.
 
