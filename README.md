@@ -1,3 +1,4 @@
+** Not yet finished. Ongoing work.
 ![Gremlin](https://raw.github.com/tinkerpop/gremlin/master/doc/images/gremlindocs-logo.png)
 
 [Gremlin](http://gremlin.tinkerpop.com) for Apache Tinkerpop 3 is a domain specific language for traversing property graphs. This language has application in the areas of graph query, analysis, and manipulation. See the [Getting Started](https://github.com/tinkerpop/gremlin/wiki/Getting-Started) Gremlin wiki page for downloading and installing Gremlin.
