@@ -44,7 +44,8 @@ gremlin> g = TinkerFactory.createModern().traversal(standard())
 This produces a hardcoded representation of the graph diagrammed [here](http://github.com/tinkerpop/blueprints/wiki/Property-Graph-Model).
 
 
-## Transform 
+## Transform _deprecated_
+
 
 Transform steps take an object and emit a transformation of it.
 
@@ -81,20 +82,16 @@ gremlin> x._().inV
 Get both adjacent vertices of the vertex, the in and the out.
 
 ```text
-gremlin> v = g.v(4)
-==>v[4]
-gremlin> v.both
+gremlin> g.V(4).both()
 ==>v[1]
 ==>v[5]
 ==>v[3]
-gremlin> v.both('knows')
+gremlin>  g.V(4).both('knows')
 ==>v[1]
-gremlin> v.both('knows', 'created')
+gremlin>  g.V(4).both('knows', 'created')
 ==>v[1]
 ==>v[5]
 ==>v[3]
-gremlin> v.both(1, 'knows', 'created')
-==>v[1]
 ```
 
 [top](#)
