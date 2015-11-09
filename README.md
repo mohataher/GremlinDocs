@@ -103,9 +103,7 @@ gremlin>  g.V(4).both('knows', 'created')
 Get both incoming and outgoing edges of the vertex.
 
 ```text
-gremlin> v = g.v(4)
-==>v[4]
-gremlin> v.bothE
+gremlin> v = g.V(4).bothE()
 ==>e[8][1-knows->4]
 ==>e[10][4-created->5]
 ==>e[11][4-created->3]
@@ -115,8 +113,6 @@ gremlin> v.bothE('knows', 'created')
 ==>e[8][1-knows->4]
 ==>e[10][4-created->5]
 ==>e[11][4-created->3]
-gremlin> v.bothE(1,'knows','created')
-==>e[8][1-knows->4]
 ```
 
 [top](#)
