@@ -43,38 +43,6 @@ gremlin> g = TinkerFactory.createModern().traversal(standard())
 
 This produces a hardcoded representation of the graph diagrammed [here](http://github.com/tinkerpop/blueprints/wiki/Property-Graph-Model).
 
-
-## Transform _deprecated_
-
-
-Transform steps take an object and emit a transformation of it.
-
-### _
-
-Identity turns an arbitrary object into a "pipeline".
-
-```text
-gremlin> x = [1,2,3]
-==>1
-==>2
-==>3
-gremlin> x._().transform{it+1}
-==>2
-==>3
-==>4
-gremlin> x = g.E.has('weight', T.gt, 0.5f).toList()
-==>e[10][4-created->5]
-==>e[8][1-knows->4]
-gremlin> x.inV
-==>[StartPipe, InPipe]
-==>[StartPipe, InPipe]
-gremlin> x._().inV
-==>v[5]
-==>v[4]
-```
-
-[top](#)
-
 ***
 
 ### both
@@ -175,29 +143,6 @@ gremlin> g.E().values('weight')
 ==>0.4
 ==>0.2
 ```
-
-[top](#)
-
-***
-
-### gather _deprecated_
-
-Collect all objects up to that step and process the gathered list with the provided closure.
-
-```text
-gremlin> g.v(1).out
-==>v[2]
-==>v[4]
-==>v[3]
-gremlin> g.v(1).out.gather
-==>[v[2], v[4], v[3]]
-gremlin> g.v(1).out.gather{it.size()}
-==>3
-```
-
-#### See Also
-
-* [scatter](#transform/scatter)
 
 [top](#)
 
