@@ -423,13 +423,13 @@ g.V().outE().inV().outE().inV().path()
 Get both outgoing tail vertex of the edge.
 
 ```text
-gremlin> e = g.e(12)
+gremlin> g.E(12)
 ==>e[12][6-created->3]
-gremlin> e.outV
+gremlin> g.E(12).outV()
 ==>v[6]
-gremlin> e.inV
+gremlin> g.E(12).inV()
 ==>v[3]
-gremlin> e.bothV
+gremlin> g.E(12).bothV()
 ==>v[6]
 ==>v[3]
 ```
@@ -443,19 +443,11 @@ gremlin> e.bothV
 Gets the path through the pipeline up to this point, where closures are post-processing for each object in the path.  If the path step is provided closures then, in a round robin fashion, the closures are evaluated over each object of the path and that post-processed path is returned.
 
 ```text
-gremlin> g.v(1).out.path
+gremlin> g.V(1).out().path()
 ==>[v[1], v[2]]
 ==>[v[1], v[4]]
 ==>[v[1], v[3]]
-gremlin> g.v(1).out.path{it.id}
-==>[1, 2]
-==>[1, 4]
-==>[1, 3]
-gremlin> g.v(1).out.path{it.id}{it.name}
-==>[1, vadas]
-==>[1, josh]
-==>[1, lop]
-gremlin> g.v(1).outE.inV.name.path
+gremlin> g.V(1).outE().inV().values('name').path()
 ==>[v[1], e[7][1-knows->2], v[2], vadas]
 ==>[v[1], e[8][1-knows->4], v[4], josh]
 ==>[v[1], e[9][1-created->3], v[3], lop]
@@ -469,47 +461,30 @@ gremlin> g.v(1).outE.inV.name.path
 
 ***
 
-### scatter
-
-Unroll all objects in the iterable at that step. Gather/Scatter is good for breadth-first traversals where the gather closure filters out unwanted elements at the current radius.
-
-```text
-gremlin> g.v(1).out
-==>v[2]
-==>v[4]
-==>v[3]
-gremlin> g.v(1).out.gather{it[1..2]}
-==>[v[4], v[3]]
-gremlin> g.v(1).out.gather{it[1..2]}.scatter
-==>v[4]
-==>v[3]
-```
-
-#### See Also
-
-* [gather](#transform/gather)
-
-[top](#)
-
-***
-
 ### select
 
 Select the named steps to emit after select with post-processing closures.
+There are two general ways to use select()-step.
+         1. Select labeled steps within a path (as defined by as() in a traversal).
+         2. Select objects out of a Map<String,Object> flow (i.e. a sub-map).
+         3. The first use case is demonstrated via example below.
 
 ```text
-gremlin> g.v(1).as('x').out('knows').as('y').select
-==>[x:v[1], y:v[2]]
-==>[x:v[1], y:v[4]]
-gremlin> g.v(1).as('x').out('knows').as('y').select(["y"])
-==>[y:v[2]]
-==>[y:v[4]]
-gremlin> g.v(1).as('x').out('knows').as('y').select(["y"]){it.name}
-==>[y:vadas]
-==>[y:josh]
-gremlin>  g.v(1).as('x').out('knows').as('y').select{it.id}{it.name}
-==>[x:1, y:vadas]
-==>[x:1, y:josh]
+gremlin> g.V().as('a').out().as('b').out().as('c') // no select
+==>v[5]
+==>v[3]
+gremlin> g.V().as('a').out().as('b').out().as('c').select('a','b','c')
+==>[a:v[1], b:v[4], c:v[5]]
+==>[a:v[1], b:v[4], c:v[3]]
+gremlin> g.V().as('a').out().as('b').out().as('c').select('a','b')
+==>[a:v[1], b:v[4]]
+==>[a:v[1], b:v[4]]
+gremlin> g.V().as('a').out().as('b').out().as('c').select('a','b').by('name')
+==>[a:marko, b:josh]
+==>[a:marko, b:josh]
+gremlin> g.V().as('a').out().as('b').out().as('c').select('a') //(1)
+==>v[1]
+==>v[1]
 ```
 
 [top](#)
@@ -521,41 +496,16 @@ gremlin>  g.v(1).as('x').out('knows').as('y').select{it.id}{it.name}
 Collect all objects up to that step into a list and randomize their order.
 
 ```text
-gremlin> g.v(1).out.shuffle
+gremlin> g.V().hasLabel('person').order().by(shuffle)
+==>v[1]
 ==>v[2]
-==>v[3]
+==>v[6]
 ==>v[4]
-gremlin> g.v(1).out.shuffle
-==>v[3]
+gremlin> g.V().hasLabel('person').order().by(shuffle)
 ==>v[2]
 ==>v[4]
-```
-
-#### See Also
-
-* [random](#filter/random)
-
-[top](#)
-
-***
-
-### transform
-
-Transform emits the result of a closure.
-
-```text
-gremlin> g.E.has('weight', T.gt, 0.5f).outV.age
-==>32
-==>29
-gremlin> g.E.has('weight', T.gt, 0.5f).outV.age.transform{it+2}
-==>34
-==>31
-gremlin> g.E.has('weight', T.gt, 0.5f).outV.transform{[it.id,it.age]}
-==>[4, 32]
-==>[1, 29]
-gremlin> g.E.has('weight', T.gt, 0.5f).outV.transform{[id:it.id,age:it.age]}
-==>{id=4, age=32}
-==>{id=1, age=29}
+==>v[1]
+==>v[6]
 ```
 
 [top](#)
@@ -567,23 +517,23 @@ gremlin> g.E.has('weight', T.gt, 0.5f).outV.transform{[id:it.id,age:it.age]}
 The vertex iterator for the graph.  Utilize this to iterate through all the vertices in the graph.  Use with care on large graphs unless used in combination with a key index lookup.
 
 ```text
-gremlin> g.V
+gremlin> g.V()
 ==>v[3]
 ==>v[2]
 ==>v[1]
 ==>v[6]
 ==>v[5]
 ==>v[4]
-gremlin> g.V("name", "marko")
+gremlin> g.V().has("name", "marko")
 ==>v[1]
-gremlin> g.V("name", "marko").name
+gremlin> g.V().has("name", "marko").values('name')
 ==>marko
 ```
 
 [top](#)
 
 ***
-
+//until here
 ## Filter
 
 Filter steps decide whether to allow an object to pass to the next step or not.
