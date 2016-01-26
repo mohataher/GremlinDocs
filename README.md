@@ -309,89 +309,15 @@ gremlin> g.V(1).outE().has(T.label,'created')
 [top](#)
 
 ***
-##edited until here
-
-### linkBoth[In/Out]
-
-An element-centric mutation that takes every incoming vertex and creates an edge to the provided vertex. It can be used with both a Vertex object or a named step.
-
-```text
-gremlin> marko = g.v(1)
-==>v[1]
-gremlin> g.V.except([marko]).linkBoth('connected',marko)
-==>v[3]
-==>v[2]
-==>v[6]
-==>v[5]
-==>v[4]
-gremlin> marko.outE('connected')
-==>e[2][1-connected->2]
-==>e[0][1-connected->3]
-==>e[6][1-connected->5]
-==>e[4][1-connected->6]
-==>e[14][1-connected->4]
-gremlin> g.V.except([marko]).outE('connected')
-==>e[1][3-connected->1]
-==>e[3][2-connected->1]
-==>e[5][6-connected->1]
-==>e[13][5-connected->1]
-==>e[15][4-connected->1]
-gremlin> g.v(1).as('x').out('created').in('created').except([g.v(1)]).linkBoth('cocreator','x')
-==>v[4]
-==>v[6]
-gremlin> g.E.has('label','cocreator')
-==>e[3][6-cocreator->1]
-==>e[2][1-cocreator->6]
-==>e[1][4-cocreator->1]
-==>e[0][1-cocreator->4]
-```
-
-[top](#)
-
-***
 
 ### map
 
-Gets the property map of the graph element.
+ Map a traverser referencing an object of type `<A>` to an object of type `<B>`
 
 ```text
-gremlin> g.v(1).map
-==>{name=marko, age=29}
-gremlin> g.v(1).map()
-==>name=marko
-==>age=29
-gremlin> g.V.map('id','age')
-==>{id=3, age=null}
-==>{id=2, age=27}
-==>{id=1, age=29}
-==>{id=6, age=35}
-==>{id=5, age=null}
-==>{id=4, age=32}
-gremlin> g.v(1)._().map('id','age')
-==>{id=1, age=29}
-```
-
-[top](#)
-
-***
-
-### memoize
-
-Remembers a particular mapping from input to output.  Long or expensive expressions with no side effects can use this step to remember a mapping, which helps reduce load when previously processed objects are passed into it.
-
-For situations where memoization may consume large amounts of RAM, consider using an embedded key-value store like [JDBM](http://code.google.com/p/jdbm2/) or some other persistent Map implementation.
-
-```text
-gremlin> g.V.out.out.memoize(1).name
-==>ripple
-==>lop
-gremlin> g.V.out.as('here').out.memoize('here').name
-==>ripple
-==>lop
-gremlin> m = [:]
-gremlin> g.V.out.out.memoize(1,m).name
-==>ripple
-==>lop
+gremlin> g.V().out("knows").map{it.get().value("name") + " is the friend name"}
+==>vadas is the friend name
+==>josh is the friend name
 ```
 
 [top](#)
@@ -403,54 +329,25 @@ gremlin> g.V.out.out.memoize(1,m).name
 Order the items in the stream according to the closure if provided.  If no closure is provided, then a default sort order is used.
 
 ```text
-gremlin> g.V.name.order
+gremlin> g.V().values('name').order()
 ==>josh
 ==>lop
 ==>marko
 ==>peter
 ==>ripple
 ==>vadas
-gremlin>  g.V.name.order{it.b <=> it.a}
+gremlin> g.V().values('name').order().by(decr)
 ==>vadas
 ==>ripple
 ==>peter
 ==>marko
 ==>lop
 ==>josh
-gremlin> g.V.order{it.b.name <=> it.a.name}.out('knows')
-==>v[2]
-==>v[4]
-```
-
-[top](#)
-
-***
-
-### orderMap
-
-For every incoming map, sort with supplied closure or `T.decr` or `T.incr` and emit keys.
-
-```text
-gremlin> g.V.both.groupCount.cap.next()
-==>v[3]=3
-==>v[2]=1
-==>v[1]=3
-==>v[6]=1
-==>v[5]=1
-==>v[4]=3b
-gremlin> g.V.both.groupCount.cap.orderMap(T.decr)
-==>v[3]
-==>v[1]
-==>v[4]
-==>v[2]
-==>v[6]
-==>v[5]
-gremlin> g.V.both.groupCount.cap.orderMap(T.decr)[0..1]
-==>v[3]
-==>v[1]
-gremlin> g.V.both.groupCount.cap.orderMap(T.decr)[0..1].name
-==>lop
+gremlin> g.V().hasLabel('person').order().by('age', incr).values('name')
+==>vadas
 ==>marko
+==>josh
+==>peter
 ```
 
 [top](#)
@@ -462,24 +359,28 @@ gremlin> g.V.both.groupCount.cap.orderMap(T.decr)[0..1].name
 Gets the out adjacent vertices to the vertex.
 
 ```text
-gremlin> v = g.v(1)
+gremlin> v = g.V(1)
 ==>v[1]
-gremlin> v.outE.inV
+gremlin> g.V(1).outE().inV()
 ==>v[2]
 ==>v[4]
 ==>v[3]
-gremlin> v.out
+gremlin> g.V(1).out()
 ==>v[2]
 ==>v[4]
 ==>v[3]
-gremlin> v.outE('knows').inV
+gremlin> g.V(1).outE('knows').inV()
 ==>v[2]
 ==>v[4]
-gremlin> v.out('knows')
+gremlin> g.V(1).out('knows')
 ==>v[2]
 ==>v[4]
-gremlin> v.out(1,'knows')
-==>v[2]
+gremlin> g.V().out().out().path().by('name').by('age')
+==>[marko, 32, ripple]
+==>[marko, 32, lop]
+gremlin> g.V().out().out().values('name').path()
+==>[v[1], v[4], v[5], ripple]
+==>[v[1], v[4], v[3], lop]
 
 ```
 
@@ -492,30 +393,31 @@ gremlin> v.out(1,'knows')
 Gets the outgoing edges to the vertex.
 
 ```text
-gremlin> v = g.v(1)
+gremlin> g.V(1)
 ==>v[1]
-gremlin> v.outE.inV
+gremlin> g.V(1).outE().inV()
 ==>v[2]
 ==>v[4]
 ==>v[3]
-gremlin> v.outE
+gremlin> g.V(1).outE()
 ==>e[7][1-knows->2]
 ==>e[8][1-knows->4]
 ==>e[9][1-created->3]
-gremlin> v.outE('knows').inV
+gremlin> g.V(1).outE('knows').inV()
 ==>v[2]
 ==>v[4]
-gremlin> v.outE('knows')
+gremlin> g.V(1).outE('knows')
 ==>e[7][1-knows->2]
 ==>e[8][1-knows->4]
-gremlin> v.outE(1,'knows')
-==>e[7][1-knows->2]
+g.V().outE().inV().outE().inV().path()
+==>[v[1], e[8][1-knows->4], v[4], e[10][4-created->5], v[5]]
+==>[v[1], e[8][1-knows->4], v[4], e[11][4-created->3], v[3]]
 ```
 
 [top](#)
 
 ***
-
+//until here
 ### outV
 
 Get both outgoing tail vertex of the edge.
