@@ -217,33 +217,27 @@ gremlin> g.V(1).id()
 [top](#)
 
 ***
-## Below here, nothing is changed yet.
 ### in
 
-Gets the adjacent vertices to the vertex.
+Gets the adjacent vertices to the vertex. It accepts one or multiple edges labels as input.
 
 ```text
-gremlin> v = g.v(4)
+gremlin> g.V(4)
 ==>v[4]
-gremlin> v.inE.outV
+gremlin> g.V(4).inE().outV()
 ==>v[1]
-gremlin> v.in
+gremlin> g.V(4).in()
 ==>v[1]
-gremlin> v = g.v(3)
+gremlin> g.V(3)
 ==>v[3]
-gremlin> v.in("created")
+gremlin> g.V(3).in("created")
 ==>v[1]
 ==>v[4]
 ==>v[6]
-gremlin> v.in(2,'created')
-==>v[1]
-==>v[4]
-gremlin> v.inE("created").outV
+gremlin> g.V(3).inE("created").outV()
 ==>v[1]
 ==>v[4]
 ==>v[6]
-gremlin> v.inE(2,'created').outV[0]
-==>v[1]
 ```
 
 [top](#)
@@ -255,27 +249,22 @@ gremlin> v.inE(2,'created').outV[0]
 Gets the incoming edges of the vertex.
 
 ```text
-gremlin> v = g.v(4)
+gremlin> g.V(4)
 ==>v[4]
-gremlin> v.inE.outV
+gremlin> g.V(4).inE().outV()
 ==>v[1]
-gremlin> v.in
+gremlin> g.V(4).in()
 ==>v[1]
-gremlin> v = g.v(3)
+gremlin> g.V(3)
 ==>v[3]
-gremlin> v.in("created")
+gremlin> g.V(3).in("created")
 ==>v[1]
 ==>v[4]
 ==>v[6]
-gremlin> v.in(2,'created')
-==>v[1]
-==>v[4]
-gremlin> v.inE("created").outV
+gremlin> g.V(3).inE("created").outV()
 ==>v[1]
 ==>v[4]
 ==>v[6]
-gremlin> v.inE(2,'created').outV[0]
-==>v[1]
 ```
 
 [top](#)
@@ -287,38 +276,15 @@ gremlin> v.inE(2,'created').outV[0]
 Get both incoming head vertex of the edge.
 
 ```text
-gremlin> e = g.e(12)
+gremlin> g.E(12)
 ==>e[12][6-created->3]
-gremlin> e.outV
+gremlin> g.E(12).outV()
 ==>v[6]
-gremlin> e.inV
+gremlin> g.E(12).inV()
 ==>v[3]
-gremlin> e.bothV
+gremlin> g.E(12).bothV()
 ==>v[6]
 ==>v[3]
-```
-
-[top](#)
-
-***
-
-### key
-
-Get the property value of an element.  The property value can be obtained by simply appending the name to the end of the element or by referencing it as a Groovy map element with square brackets.  For best performance, drop down to the Blueprints API and use `getProperty(key)`.
-
-```text
-gremlin> v = g.v(3)
-==>v[3]
-gremlin> v.name
-==>lop
-gremlin> v['name']
-==>lop
-gremlin> x = 'name'
-==>name
-gremlin> v[x]
-==>lop
-gremlin> v.getProperty('name')
-==>lop
 ```
 
 [top](#)
@@ -330,19 +296,20 @@ gremlin> v.getProperty('name')
 Gets the label of an edge.
 
 ```text
-gremlin> g.v(6).outE.label
+gremlin> g.V(6).outE().label()
 ==>created
-gremlin> g.v(1).outE.filter{it.label=='created'}
+gremlin>  g.V(1).outE().filter{it.get().label=='created'}
 ==>e[9][1-created->3]
 
 // a more efficient approach to use of label
-gremlin> g.v(1).outE.has('label','created')
+gremlin> g.V(1).outE().has(T.label,'created')
 ==>e[9][1-created->3]
 ```
 
 [top](#)
 
 ***
+##edited until here
 
 ### linkBoth[In/Out]
 
@@ -470,7 +437,7 @@ gremlin> g.V.both.groupCount.cap.next()
 ==>v[1]=3
 ==>v[6]=1
 ==>v[5]=1
-==>v[4]=3
+==>v[4]=3b
 gremlin> g.V.both.groupCount.cap.orderMap(T.decr)
 ==>v[3]
 ==>v[1]
