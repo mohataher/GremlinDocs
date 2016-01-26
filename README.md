@@ -417,7 +417,6 @@ g.V().outE().inV().outE().inV().path()
 [top](#)
 
 ***
-//until here
 ### outV
 
 Get both outgoing tail vertex of the edge.
@@ -524,10 +523,11 @@ gremlin> g.V()
 ==>v[6]
 ==>v[5]
 ==>v[4]
-gremlin> g.V().has("name", "marko")
+gremlin> g.V(1)
 ==>v[1]
-gremlin> g.V().has("name", "marko").values('name')
-==>marko
+ g.V(1,2)
+==>v[1]
+==>v[2]
 ```
 
 [top](#)
